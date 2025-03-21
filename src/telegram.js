@@ -1598,6 +1598,24 @@ class TelegramBot extends EventEmitter {
     form.user_id = userId;
     return this._request('promoteChatMember', { form });
   }
+  
+  /**
+ * Use this method to kick a user from a group, a supergroup or a channel.
+ * The user will be able to return to the chat on their own using invite links, etc.
+ * 
+ * The **bot must be an administrator in the group, supergroup or a channel** with the appropriate permissions.
+ *
+ * @param  {Number|String} chatId   Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
+ * @param  {Number} userId  Unique identifier of the target user
+ * @param  {Object} [options] Additional Telegram query options
+ * @return {Promise} True on success.
+ * @see https://core.telegram.org/bots/api#kickchatmember
+ */
+kickChatMember(chatId, userId, form = {}) {
+  form.chat_id = chatId;
+  form.user_id = userId;
+  return this._request('kickChatMember', { form });
+}
 
   /**
    * Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
