@@ -1704,6 +1704,29 @@ kickChatMember(chatId, userId, form = {}) {
   }
 
   /**
+ * Use this method to get a Telegram user's full name.
+ * 
+ * This method retrieves the first name, last name, and combines them into a full name.
+ *
+ * @param  {Number} userId  Unique identifier of the target user
+ * @param  {Object} [options] Additional Telegram query options
+ * @return {Promise} Promise resolving to the user's full name
+ * @see https://core.telegram.org/bots/api#getuser
+ */
+getName(userId, form = {}) {
+  form.user_id = userId;
+  return this._request('getUser', { form })
+    .then(user => {
+      // Combine first name and last name
+      const firstName = user.first_name || '';
+      const lastName = user.last_name || '';
+      
+      // Trim and handle cases with or without last name
+      return (firstName + ' ' + lastName).trim();
+    });
+}
+
+  /**
    * Use this method to create an additional invite link for a chat.
    *
    * The bot **must be an administrator in the chat** for this to work and must have the appropriate admin rights.
