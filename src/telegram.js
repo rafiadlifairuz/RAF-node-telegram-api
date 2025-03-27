@@ -1035,6 +1035,30 @@ getUserStatus(userId) {
 }
 
   /**
+ * Use this method to get a Telegram user's username.
+ * 
+ * Retrieves the username of a specific user. Returns null if no username is set.
+ *
+ * @param  {Number} userId  Unique identifier of the target user
+ * @return {Promise} Promise resolving to the user's username (or null)
+ * @see https://core.telegram.org/bots/api#getuser
+ */
+getUsername(userId) {
+  const form = {
+    user_id: userId
+  };
+
+  return this._request('getUser', { form })
+    .then(user =>  {
+      return user.username || null;
+    })
+    .catch(error => {
+      console.error('Error retrieving username:', error);
+      return null;
+    });
+}
+
+  /**
    * Send text message.
    * @param  {Number|String} chatId Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
    * @param  {String} text Text of the message to be sent
