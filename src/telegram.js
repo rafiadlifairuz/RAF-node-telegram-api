@@ -957,6 +957,84 @@ class TelegramBot extends EventEmitter {
   }
 
   /**
+ * Use this method to get a user's profile photos.
+ * 
+ * Retrieves the profile photos of a specific user.
+ *
+ * @param  {Number} userId  Unique identifier of the target user
+ * @param  {Object} [options] Additional options for retrieving photos
+ * @param  {Number} [options.offset] Sequential number of the first photo to be returned
+ * @param  {Number} [options.limit] Limits the number of photos to be retrieved (1-100)
+ * @return {Promise} Promise resolving to an object containing user profile photos
+ * @see https://core.telegram.org/bots/api#getuserprofilephotos
+ */
+getUserProfilePhotos(userId, options = {}) {
+  const form = {
+    user_id: userId,
+    offset: options.offset || 0,
+    limit: options.limit || 100
+  };
+
+  return this._request('getUserProfilePhotos', { form });
+}
+
+/**
+ * Use this method to get a user's current status in Telegram.
+ * 
+ * Retrieves the online status, last seen time, and other status-related information.
+ *
+ * @param  {Number} userId  Unique identifier of the target user
+ * @return {Promise} Promise resolving to the user's status information
+ * @see https://core.telegram.org/bots/api#getuserstatus
+ */
+getUserStatus(userId) {
+  const form = {
+    user_id: userId
+  };
+
+  return this._request('getUserStatus', { form })
+    .then(status => {
+      // Parse and format the status
+      switch (status.status) {
+        case 'online':
+          return {
+            status: 'Online',
+            online: true
+          };
+        case 'offline':
+          return {
+            status: 'Offline',
+            online: false,
+            last_seen: status.last_seen_date ? new Date(status.last_seen_date * 1000) : null
+          };
+        case 'recently':
+          return {
+            status: 'Recently Active',
+            online: false,
+            description: 'Was online recently'
+          };
+        case 'within_week':
+          return {
+            status: 'Active Within a Week',
+            online: false,
+            description: 'Was online within the last week'
+          };
+        case 'within_month':
+          return {
+            status: 'Active Within a Month',
+            online: false,
+            description: 'Was online within the last month'
+          };
+        default:
+          return {
+            status: 'Unknown',
+            online: false
+          };
+      }
+    });
+}
+
+  /**
    * Send text message.
    * @param  {Number|String} chatId Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
    * @param  {String} text Text of the message to be sent
