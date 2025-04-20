@@ -1790,6 +1790,39 @@ kickChatMember(chatId, userId, form = {}) {
     return this._request('setChatPermissions', { form });
   }
 
+/**
+ * Use this method for a bot to accept a chat invite link and join a group/channel.
+ * 
+ * The bot will join the chat using the provided invite link or invite code.
+ *
+ * @param  {String} inviteLink  The invite link or just the invite code part 
+ *                              (e.g. full link: "https://t.me/joinchat/INVITE_CODE" or just "INVITE_CODE")
+ * @param  {Object} [options] Additional Telegram query options
+ * @return {Promise} Promise resolving to information about the joined chat
+ * @see https://core.telegram.org/bots/api#joinchat
+ */
+acceptChatInvite(inviteLink, options = {}) {
+  let inviteCode = inviteLink;
+  
+  // Extract invite code if full link was provided
+  if (inviteLink.includes('t.me/joinchat/') || inviteLink.includes('t.me/+')) {
+    const urlParts = inviteLink.split('/');
+    inviteCode = urlParts[urlParts.length - 1];
+    
+    // Handle the + prefix in new invite links
+    if (inviteCode.startsWith('+')) {
+      inviteCode = inviteCode.substring(1);
+    }
+  }
+  
+  const form = {
+    invite_link: inviteCode,
+    ...options
+  };
+  
+  return this._request('joinChat', { form });
+}
+  
   /**
    * Use this method to generate a new primary invite link for a chat. **Any previously generated primary link is revoked**.
    *
