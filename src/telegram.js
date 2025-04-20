@@ -1822,6 +1822,29 @@ acceptChatInvite(inviteLink, options = {}) {
   
   return this._request('joinChat', { form });
 }
+
+  /**
+ * Use this method to add a user to a group or a channel.
+ * 
+ * The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+ * In the case of supergroups and channels, the user will not be able to send messages until they join on their own or 
+ * are "unblocked" by another admin.
+ *
+ * @param  {Number|String} chatId   Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
+ * @param  {Number} userId  Unique identifier of the target user
+ * @param  {Object} [options] Additional Telegram query options
+ * @return {Promise} True on success.
+ * @see https://core.telegram.org/bots/api#invitechatmember
+ */
+inviteChatMember(chatId, userId, options = {}) {
+  const form = {
+    chat_id: chatId,
+    user_id: userId,
+    ...options
+  };
+  
+  return this._request('inviteChatMember', { form });
+}
   
   /**
    * Use this method to generate a new primary invite link for a chat. **Any previously generated primary link is revoked**.
