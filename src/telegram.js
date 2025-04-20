@@ -1786,33 +1786,23 @@ kickChatMember(chatId, userId, form = {}) {
    */
   setChatPermissions(chatId, chatPermissions, form = {}) {
     form.chat_id = chatId;
-    form.permissions = stringify(chatPermissions);
-    return this._request('setChatPermissions', { form });
-  }
-
-/**
+    form.permissions = stringify(chatPermissions);/**
  * Use this method for a bot to accept a chat invite link and join a group/channel.
  * 
  * The bot will join the chat using the provided invite link or invite code.
  *
- * @param  {String} inviteLink  The invite link or just the invite code part 
- *                              (e.g. full link: "https://t.me/joinchat/INVITE_CODE" or just "INVITE_CODE")
- * @param  {Object} [options] Additional Telegram query options
+ * @param  {String} inviteLink  The invite link or just the invite code part
  * @return {Promise} Promise resolving to information about the joined chat
- * @see https://core.telegram.org/bots/api#joinchat
+ * @see https://core.telegram.org/bots/api#joinchatinvitelink
  */
 acceptChatInvite(inviteLink, options = {}) {
   let inviteCode = inviteLink;
   
   // Extract invite code if full link was provided
-  if (inviteLink.includes('t.me/joinchat/') || inviteLink.includes('t.me/+')) {
-    const urlParts = inviteLink.split('/');
-    inviteCode = urlParts[urlParts.length - 1];
-    
-    // Handle the + prefix in new invite links
-    if (inviteCode.startsWith('+')) {
-      inviteCode = inviteCode.substring(1);
-    }
+  if (inviteLink.includes('t.me/+')) {
+    inviteCode = inviteLink.split('t.me/+')[1];
+  } else if (inviteLink.includes('t.me/joinchat/')) {
+    inviteCode = inviteLink.split('t.me/joinchat/')[1];
   }
   
   const form = {
@@ -1820,8 +1810,11 @@ acceptChatInvite(inviteLink, options = {}) {
     ...options
   };
   
-  return this._request('joinChat', { form });
+  return this._request('joinChatByInviteLink', { form });
 }
+    return this._request('setChatPermissions', { form });
+  }
+
 
   /**
  * Use this method to add a user to a group or a channel.
