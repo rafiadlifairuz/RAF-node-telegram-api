@@ -1806,7 +1806,7 @@ acceptChatInvite(inviteLink, options = {}) {
   }
   
   const form = {
-    invite_link: inviteCode,
+    iznvite_link: inviteCode,
     ...options
   };
   
@@ -1814,6 +1814,39 @@ acceptChatInvite(inviteLink, options = {}) {
 }
     return this._request('setChatPermissions', { form });
   }
+
+/**
+  * Use this method to send a long message to a chat.
+  * If the message exceeds the maximum length, it will be split into multiple messages.
+  *
+  * The **bot must be a member** of the chat for this to work.
+  *
+  * **By default**, this method guarantees that the message is sent successfully.
+  *
+  * @param  {Number|String} chatId   Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
+  * @param  {String} message  The message text to be sent
+  * @param  {Object} [options] Additional Telegram query options
+  * @return {Promise} True on success
+  * @see https://core.telegram.org/bots/api#sendmessage
+  */
+sendLongMessage(chatId, message, options = {}) {
+    const maxMessageLength = 4096; 
+    const messages = [];
+
+    
+    for (let i = 0; i < message.length; i += maxMessageLength) {
+        messages.push(message.substring(i, i + maxMessageLength));
+    }
+
+    
+    return Promise.all(messages.map((msg) => {
+        return this._request('sendMessage', {
+            chat_id: chatId,
+            text: msg,
+            ...options
+        });
+    }));
+}
 
 
   /**
