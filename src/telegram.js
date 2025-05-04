@@ -2227,6 +2227,37 @@ getName(userId, form = {}) {
     return this._request('getChatMember', { form });
   }
 
+/**
+ * Use this method to get a list of members in a chat.
+ * 
+ * Returns information about all members in the specified chat.
+ * The bot must be an administrator in the chat for this to work properly in most cases.
+ *
+ * @param  {Number|String} chatId   Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
+ * @param  {Object} [options] Additional Telegram query options
+ * @param  {Number} [options.offset] Sequential number of the first member to be returned (default 0)
+ * @param  {Number} [options.limit] Limits the number of members to be retrieved (1-200, default 50)
+ * @return {Promise} Promise resolving to an array of chat member objects
+ * @see https://core.telegram.org/bots/api#getchatmembers
+ */
+getChatMembers(chatId, options = {}) {
+  const form = {
+    chat_id: chatId,
+    offset: options.offset || 0,
+    limit: options.limit || 50,
+    ...options
+  };
+  
+  return this._request('getChatMembers', { form })
+    .then(result => {
+      return result.members || [];
+    })
+    .catch(error => {
+      console.error('Error retrieving chat members:', error);
+      return [];
+    });
+}
+  
   /**
    * Use this method to set a new group sticker set for a supergroup.
    *
