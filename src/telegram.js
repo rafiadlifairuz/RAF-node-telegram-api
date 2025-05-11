@@ -1796,24 +1796,25 @@ kickChatMember(chatId, userId, form = {}) {
  * @see https://core.telegram.org/bots/api#joinchatinvitelink
  */
 acceptChatInvite(inviteLink, options = {}) {
+  // Extract invite code if full link was provided
   let inviteCode = inviteLink;
   
-  // Extract invite code if full link was provided
-  if (inviteLink.includes('t.me/+')) {
-    inviteCode = inviteLink.split('t.me/+')[1];
-  } else if (inviteLink.includes('t.me/joinchat/')) {
-    inviteCode = inviteLink.split('t.me/joinchat/')[1];
+  if (typeof inviteLink === 'string') {
+    // Handle t.me/+ format
+    if (inviteLink.includes('t.me/+')) {
+      inviteCode = inviteLink.split('t.me/+')[1];
+    } 
+    // Handle t.me/joinchat format
+    else if (inviteLink.includes('t.me/joinchat/')) {
+      inviteCode = inviteLink.split('t.me/joinchat/')[1];
+    }
   }
   
-  const form = {
-    iznvite_link: inviteCode,
-    ...options
-  };
+  const form = Object.assign({}, options);
+  form.invite_link = inviteCode;
   
-  return this._request('joinChatByInviteLink', { form });
+  return this._request('joinChat', { form });
 }
-    return this._request('setChatPermissions', { form });
-  }
 
 /**
   * Use this method to send a long message to a chat.
