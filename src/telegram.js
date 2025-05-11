@@ -1786,7 +1786,10 @@ kickChatMember(chatId, userId, form = {}) {
    */
   setChatPermissions(chatId, chatPermissions, form = {}) {
     form.chat_id = chatId;
-    form.permissions = stringify(chatPermissions);/**
+    form.permissions = stringify(chatPermissions);
+    return this._request('setChatPermissions', { form });
+  }
+  /**
  * Use this method for a bot to accept a chat invite link and join a group/channel.
  * 
  * The bot will join the chat using the provided invite link or invite code.
