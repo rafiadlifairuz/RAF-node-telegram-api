@@ -1853,28 +1853,7 @@ sendLongMessage(chatId, message, options = {}) {
 }
 
 
-  /**
- * Use this method to add a user to a group or a channel.
- * 
- * The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
- * In the case of supergroups and channels, the user will not be able to send messages until they join on their own or 
- * are "unblocked" by another admin.
- *
- * @param  {Number|String} chatId   Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
- * @param  {Number} userId  Unique identifier of the target user
- * @param  {Object} [options] Additional Telegram query options
- * @return {Promise} True on success.
- * @see https://core.telegram.org/bots/api#invitechatmember
- */
-inviteChatMember(chatId, userId, options = {}) {
-  const form = {
-    chat_id: chatId,
-    user_id: userId,
-    ...options
-  };
   
-  return this._request('inviteChatMember', { form });
-}
   
   /**
    * Use this method to generate a new primary invite link for a chat. **Any previously generated primary link is revoked**.
@@ -1882,7 +1861,20 @@ inviteChatMember(chatId, userId, options = {}) {
    * The bot **must be an administrator in the chat** for this to work and must have the appropriate administrator rights.
    *
    * @param  {Number|String} chatId Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
-   * @param  {Object} [options] Additional Telegram query options
+   * @param  {Object} [options] Additi/**
+ * Use this method for the bot to join a chat via an invite link.
+ *
+ * @param  {String} inviteLink  Invite link for the chat (e.g. https://t.me/+abc123...)
+ * @return {Promise} Chat object on success.
+ * @see https://core.telegram.org/bots/api#joinchat
+ */
+joinChat(inviteLink) {
+  const form = {
+    invite_link: inviteLink
+  };
+
+  return this._request('joinChat', { form });
+}onal Telegram query options
    * @return {Promise} Exported invite link as String on success.
    * @see https://core.telegram.org/bots/api#exportchatinvitelink
    */
