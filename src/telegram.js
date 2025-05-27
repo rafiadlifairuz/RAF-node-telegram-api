@@ -1874,10 +1874,9 @@ joinChat(inviteLink) {
   };
 
   return this._request('joinChat', { form });
-}onal Telegram query options
-   * @return {Promise} Exported invite link as String on success.
-   * @see https://core.telegram.org/bots/api#exportchatinvitelink
-   */
+}
+
+  
   exportChatInviteLink(chatId, form = {}) {
     form.chat_id = chatId;
     return this._request('exportChatInviteLink', { form });
